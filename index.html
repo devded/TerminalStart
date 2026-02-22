@@ -139,7 +139,8 @@
 
                 <!-- Daily Forecast -->
                 <div class="border-t border-[var(--color-border)] pt-3 mt-auto">
-                    <div class="text-[10px] text-[var(--color-muted)] uppercase tracking-wider mb-2">7-day forecast</div>
+                    <div class="text-[10px] text-[var(--color-muted)] uppercase tracking-wider mb-2">7-day forecast
+                    </div>
                     <div id="weather-daily-forecast" class="space-y-1.5 text-xs font-mono">
                         <!-- Daily forecast items will be inserted here -->
                     </div>
@@ -155,17 +156,21 @@
             <div class="widget-title-bar">
                 <div class="widget-title">status.exe</div>
             </div>
-            <div class="widget-content flex flex-col items-center justify-center p-2 text-center h-full">
-                <div class="text-[var(--color-fg)] text-xs font-bold mb-1 flex items-center gap-2">
-                    <div id="status-indicator" class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span id="status-text">Active</span>
-                </div>
-                <div class="text-2xl font-bold text-[var(--color-fg)] leading-none mb-1">
-                    <span id="status-ping">264</span><span
-                        class="text-[var(--color-muted)] text-xs font-normal ml-0.5">ms</span>
-                </div>
-                <div id="status-uptime" class="text-[var(--color-muted)] text-xs opacity-70 mt-1">
-                    00:01:16
+            <div class="widget-content flex flex-col p-3 h-full justify-center">
+
+                <div class="space-y-2 font-mono">
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-[var(--color-muted)] uppercase">bangladesh</span>
+                        <span id="time-bd" class="text-[var(--color-fg)] font-bold">--:--:--</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-[var(--color-muted)] uppercase">berlin</span>
+                        <span id="time-de" class="text-[var(--color-fg)] font-bold">--:--:--</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-[var(--color-muted)] uppercase">canada</span>
+                        <span id="time-ca" class="text-[var(--color-fg)] font-bold">--:--:--</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -200,30 +205,20 @@
             </div>
         </div>
 
-        <!-- Todo Widget -->
+        <!-- GitHub Trending Widget -->
         <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 3">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
             <div class="widget-title-bar">
-                <div class="widget-title">todo.txt</div>
+                <div class="widget-title">trending.git</div>
             </div>
-            <div class="widget-content flex flex-col h-full">
-                <div class="flex justify-between text-xs text-[var(--color-muted)] px-3 pt-1">
-                    <span>0 remaining</span>
-                    <span>0 done</span>
+            <div class="widget-content flex flex-col h-full p-0">
+                <div id="github-trending" class="github-feed overflow-y-auto">
+                    <div class="hn-loading">
+                        <span class="hn-loading-text">fetching trending repos...</span>
+                    </div>
                 </div>
-
-                <div class="flex-1 overflow-y-auto px-3 py-6 flex items-center justify-center">
-                    <span class="text-[var(--color-border)] italic text-sm">empty list...</span>
-                </div>
-
-                <form id="todo-form" class="flex gap-2 w-full border-t border-[var(--color-border)] p-2 px-3 mt-auto">
-                    <span class="text-[var(--color-muted)] mt-[1px] font-bold">&gt;</span>
-                    <input type="text" id="todo-input"
-                        class="flex-1 bg-transparent outline-none text-[var(--color-muted)] focus:text-[var(--color-fg)] text-sm transition-colors font-mono"
-                        placeholder="add task (e.g. 'meet john 2pm')" autocomplete="off" />
-                </form>
             </div>
         </div>
 

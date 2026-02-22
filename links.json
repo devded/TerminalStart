@@ -3,20 +3,20 @@
         "category": "work",
         "links": [
             {
-                "label": "gmail",
-                "url": "https://gmail.com"
+                "label": "khas",
+                "url": "https://learn.khas.edu.tr/my/"
             },
             {
-                "label": "calendar",
-                "url": "https://calendar.google.com"
+                "label": "notion",
+                "url": "https://notion.so"
             },
             {
-                "label": "drive",
-                "url": "https://drive.google.com"
+                "label": "outlook",
+                "url": "https://outlook.com"
             },
             {
-                "label": "docs",
-                "url": "https://docs.google.com"
+                "label": "teams",
+                "url": "https://teams.microsoft.com"
             }
         ]
     },
@@ -44,10 +44,6 @@
     {
         "category": "ai",
         "links": [
-            {
-                "label": "khas",
-                "url": "https://learn.khas.edu.tr/my/"
-            },
             {
                 "label": "perplexity",
                 "url": "https://perplexity.ai"

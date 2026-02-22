@@ -329,7 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.daily && data.daily.time && dailyForecastContainer) {
         let dailyHtml = "";
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        
+
         for (let i = 0; i < Math.min(7, data.daily.time.length); i++) {
           const dateObj = new Date(data.daily.time[i]);
           const dayName = i === 0 ? "Today" : days[dateObj.getDay()];
@@ -367,105 +367,45 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchWeather();
   setInterval(fetchWeather, 30 * 60 * 1000);
 
-  // --- Status Widget Logic ---
-  const statusIndicator = document.getElementById("status-indicator");
-  const statusText = document.getElementById("status-text");
-  const statusPing = document.getElementById("status-ping");
-  const statusUptime = document.getElementById("status-uptime");
+  // --- Status Widget Logic (World Clock) ---
+  const timeBd = document.getElementById("time-bd");
+  const timeDe = document.getElementById("time-de");
+  const timeCa = document.getElementById("time-ca");
 
-  let isOnline = navigator.onLine;
-  const mountTime = Date.now();
-  let pingHistory = [];
+  function updateWorldClocks() {
+    const now = new Date();
 
-  function formatUptime(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const h = Math.floor(totalSeconds / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
-    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }
+    const options = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
 
-  function updateStatusDisplay() {
-    if (!statusIndicator || !statusText) return;
-    if (isOnline) {
-      statusIndicator.className = "w-2 h-2 rounded-full bg-green-500";
-      statusText.textContent = "Active";
-    } else {
-      statusIndicator.className = "w-2 h-2 rounded-full bg-red-500";
-      statusText.textContent = "Offline";
-      if (statusPing) {
-        statusPing.textContent = "---";
-      }
+    if (timeBd) {
+      timeBd.textContent = new Intl.DateTimeFormat('en-GB', {
+        ...options,
+        timeZone: 'Asia/Dhaka'
+      }).format(now);
+    }
+
+    if (timeDe) {
+      timeDe.textContent = new Intl.DateTimeFormat('en-GB', {
+        ...options,
+        timeZone: 'Europe/Berlin'
+      }).format(now);
+    }
+
+    if (timeCa) {
+      timeCa.textContent = new Intl.DateTimeFormat('en-GB', {
+        ...options,
+        timeZone: 'America/Toronto'
+      }).format(now);
     }
   }
 
-  window.addEventListener("online", () => {
-    isOnline = true;
-    updateStatusDisplay();
-  });
-  window.addEventListener("offline", () => {
-    isOnline = false;
-    updateStatusDisplay();
-  });
-  updateStatusDisplay();
-
-  // Measure Ping using DNS-over-HTTPS endpoint (more reliable for CORS)
-  async function measurePing() {
-    if (!isOnline || !statusPing) return;
-    
-    const urls = [
-      "https://dns.google.com/resolve?name=google.com",
-      "https://cloudflare-dns.com/dns-query?name=google.com"
-    ];
-    
-    const results = [];
-    
-    for (const url of urls) {
-      try {
-        const start = performance.now();
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 3000);
-        
-        await fetch(url, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          signal: controller.signal,
-        });
-        
-        clearTimeout(timeout);
-        const end = performance.now();
-        results.push(end - start);
-      } catch {
-        // Skip failed attempts
-      }
-    }
-    
-    if (results.length > 0) {
-      // Calculate average and add to history
-      const avgPing = Math.round(results.reduce((a, b) => a + b, 0) / results.length);
-      pingHistory.push(avgPing);
-      
-      // Keep last 5 measurements for smoothing
-      if (pingHistory.length > 5) pingHistory.shift();
-      
-      // Display smoothed average
-      const smoothed = Math.round(pingHistory.reduce((a, b) => a + b, 0) / pingHistory.length);
-      statusPing.textContent = smoothed;
-    } else {
-      statusPing.textContent = "---";
-    }
-  }
-
-  measurePing();
-  setInterval(measurePing, 3000); // Ping every 3 seconds
-
-  // Update Uptime
-  setInterval(() => {
-    if (statusUptime) {
-      statusUptime.textContent = formatUptime(Date.now() - mountTime);
-    }
-  }, 1000);
+  setInterval(updateWorldClocks, 1000);
+  updateWorldClocks();
 
   // --- Links Fetching Logic ---
   async function loadLinks() {
@@ -527,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- The Hacker News Feed (thehackernews.com) ---
   const THN_RSS = 'https://feeds.feedburner.com/TheHackersNews';
-  const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+  const CORS_PROXY = 'https://proxy.corsfix.com/?';
 
   function thnTimeAgo(dateStr) {
     const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -544,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
     feed.innerHTML = `<div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>`;
 
     try {
-      const res = await fetch(CORS_PROXY + encodeURIComponent(THN_RSS));
+      const res = await fetch(CORS_PROXY + THN_RSS);
       if (!res.ok) throw new Error('Feed fetch failed');
       const xmlText = await res.text();
       const parser = new DOMParser();

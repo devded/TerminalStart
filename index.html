@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>~/CSir.info</title>
+
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css" />
+
+    <!-- Tailwind CSS (CDN for simple version) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        google: "#4285F4",
+                        github: "#ffffff",
+                        slack: "#E01E5A",
+                        keep: "#FBBC04",
+                        leetcode: "#FFA116",
+                        perplexity: "#22B8CD",
+                        claude: "#D97757",
+                        aistudio: "#ffffff",
+                        chatgpt: "#10A37F",
+                        youtube: "#FF0000",
+                        reddit: "#FF4500",
+                        twitter: "#ffffff",
+                        feedly: "#2BB24C",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="min-h-screen w-full p-2 text-sm bg-[var(--color-bg)] relative overflow-hidden select-none">
+    <!-- Grid Container -->
+    <div class="w-full h-[calc(100vh-2rem)] z-10 relative px-2 py-4 grid-container" id="grid-layout">
+        <!-- Search Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 1">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">search.ai</div>
+            </div>
+            <div class="widget-content flex flex-col justify-center px-4 py-2 relative">
+                <form id="search-form" class="flex items-center gap-2 w-full z-20">
+                    <button type="button" id="search-engine-btn"
+                        class="shrink-0 text-[var(--color-accent)] hover:text-[var(--color-fg)] font-bold font-mono transition-colors select-none"
+                        title="Click to switch search engine">
+                        [google]
+                    </button>
+                    <div class="flex-1 relative group">
+                        <span
+                            class="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--color-muted)] font-bold pointer-events-none">
+                            &gt;
+                        </span>
+                        <input type="text" id="search-input"
+                            class="w-full bg-transparent border-none outline-none text-[var(--color-fg)] placeholder-[var(--color-muted)] font-mono pl-4 focus:placeholder-opacity-50 h-full py-1"
+                            placeholder="search..." autocomplete="off" />
+                    </div>
+                    <button type="submit"
+                        class="text-[var(--color-muted)] hover:text-[var(--color-fg)] text-xs font-mono">
+                        [ENTER]
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Weather Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: 1; grid-row: 2 / span 2">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">forecast.py</div>
+            </div>
+            <div class="widget-content flex flex-col p-4 w-full h-full">
+                <div id="weather-temp" class="text-[52px] font-bold text-[var(--color-fg)] leading-none mb-2">
+                    5°
+                </div>
+                <div id="weather-condition" class="text-[var(--color-muted)] text-lg mb-4">
+                    overcast
+                </div>
+
+                <div class="grid grid-cols-2 gap-y-2 text-xs mb-auto">
+                    <div class="text-[var(--color-muted)]">
+                        humi
+                        <span id="weather-humidity" class="text-[var(--color-fg)]">82%</span>
+                    </div>
+                    <div class="text-[var(--color-muted)]">
+                        wind
+                        <span id="weather-wind" class="text-[var(--color-fg)]">13 mph</span>
+                    </div>
+                    <div class="text-[var(--color-muted)]">
+                        prec
+                        <span id="weather-precip" class="text-[var(--color-fg)]">3%</span>
+                    </div>
+                    <div class="text-[var(--color-muted)]">
+                        feel
+                        <span id="weather-feels" class="text-[var(--color-fg)]">1°</span>
+                    </div>
+                </div>
+
+                <div id="weather-forecast"
+                    class="border-t border-[var(--color-border)] mt-4 pt-4 text-xs font-mono space-y-1">
+                    <div class="grid grid-cols-[30px_30px_1fr]">
+                        <span class="text-[var(--color-fg)]">3 pm</span>
+                        <span class="text-[var(--color-fg)]">5°</span>
+                        <span class="text-[var(--color-muted)]">overcast</span>
+                    </div>
+                    <div class="grid grid-cols-[30px_30px_1fr]">
+                        <span class="text-[var(--color-fg)]">4 pm</span>
+                        <span class="text-[var(--color-fg)]">5°</span>
+                        <span class="text-[var(--color-muted)]">overcast</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: 2; grid-row: 2">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">status.exe</div>
+            </div>
+            <div class="widget-content flex flex-col items-center justify-center p-2 text-center h-full">
+                <div class="text-[var(--color-fg)] text-xs font-bold mb-1 flex items-center gap-2">
+                    <div id="status-indicator" class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span id="status-text">Active</span>
+                </div>
+                <div class="text-2xl font-bold text-[var(--color-fg)] leading-none mb-1">
+                    <span id="status-ping">264</span><span
+                        class="text-[var(--color-muted)] text-xs font-normal ml-0.5">ms</span>
+                </div>
+                <div id="status-uptime" class="text-[var(--color-muted)] text-xs opacity-70 mt-1">
+                    00:01:16
+                </div>
+            </div>
+        </div>
+
+        <!-- Clock Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: 3; grid-row: 2">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">clock.sys</div>
+            </div>
+            <div class="widget-content flex flex-col items-center justify-center h-full w-full">
+                <div class="flex flex-col items-center justify-center w-full">
+                    <div class="flex items-end gap-2">
+                        <div id="clock-time" class="font-digital text-[var(--color-fg)] leading-none text-center"
+                            style="font-size: 32px">
+                            02:47:11
+                        </div>
+                        <div id="clock-ampm"
+                            class="font-digital text-[var(--color-fg)] leading-none opacity-80 mb-[4px]"
+                            style="font-size: 16px">
+                            PM
+                        </div>
+                    </div>
+                    <div id="clock-date"
+                        class="text-[var(--color-muted)] font-mono text-center leading-tight mt-3 px-1 w-full truncate"
+                        style="font-size: 12px">
+                        sunday, february 22, 2026
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Todo Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 3">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">todo.txt</div>
+            </div>
+            <div class="widget-content flex flex-col h-full">
+                <div class="flex justify-between text-xs text-[var(--color-muted)] px-3 pt-1">
+                    <span>0 remaining</span>
+                    <span>0 done</span>
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-3 py-6 flex items-center justify-center">
+                    <span class="text-[var(--color-border)] italic text-sm">empty list...</span>
+                </div>
+
+                <form id="todo-form" class="flex gap-2 w-full border-t border-[var(--color-border)] p-2 px-3 mt-auto">
+                    <span class="text-[var(--color-muted)] mt-[1px] font-bold">&gt;</span>
+                    <input type="text" id="todo-input"
+                        class="flex-1 bg-transparent outline-none text-[var(--color-muted)] focus:text-[var(--color-fg)] text-sm transition-colors font-mono"
+                        placeholder="add task (e.g. 'meet john 2pm')" autocomplete="off" />
+                </form>
+            </div>
+        </div>
+
+        <!-- Links Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 4">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">links.href</div>
+            </div>
+            <div class="widget-content overflow-y-auto px-6 py-4">
+                <div id="links-container" class="grid grid-cols-4 gap-6 h-full text-sm"></div>
+            </div>
+        </div>
+
+        <!-- Snake Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 5; height: 110px">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">snake.exe</div>
+            </div>
+            <div class="widget-content flex items-center justify-center px-4 relative overflow-hidden bg-[#050505]">
+                <div class="absolute bottom-2 left-3 text-[10px] text-[var(--color-muted)]">
+                    score: 4
+                </div>
+                <!-- Game Canvas Mock -->
+                <div class="w-full flex justify-center items-center opacity-80" style="margin-top: 5px">
+                    <!-- grid overlay -->
+                    <div class="absolute inset-0 z-0 opacity-10" style="
+                background-image:
+                  linear-gradient(var(--color-border) 1px, transparent 1px),
+                  linear-gradient(
+                    90deg,
+                    var(--color-border) 1px,
+                    transparent 1px
+                  );
+                background-size: 10px 10px;
+              "></div>
+                    <div class="flex gap-[2px] z-10">
+                        <!-- Snake -->
+                        <div class="w-2 h-2 bg-[var(--color-accent)] opacity-50"></div>
+                        <div class="w-2 h-2 bg-[var(--color-accent)] opacity-60"></div>
+                        <div class="w-2 h-2 bg-[var(--color-accent)] opacity-70"></div>
+                        <div class="w-2 h-2 bg-[var(--color-accent)] opacity-80"></div>
+                        <div class="w-2 h-2 bg-[var(--color-accent)]"></div>
+                        <!-- Apple space -->
+                        <div class="w-[80px]"></div>
+                        <!-- Apple -->
+                        <div class="w-2 h-2 bg-[var(--color-accent)] shadow-[0_0_6px_var(--color-accent)]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+[
+    {
+        "category": "work",
+        "links": [
+            {
+                "label": "gmail",
+                "url": "https://gmail.com"
+            },
+            {
+                "label": "calendar",
+                "url": "https://calendar.google.com"
+            },
+            {
+                "label": "drive",
+                "url": "https://drive.google.com"
+            },
+            {
+                "label": "docs",
+                "url": "https://docs.google.com"
+            }
+        ]
+    },
+    {
+        "category": "dev",
+        "links": [
+            {
+                "label": "github",
+                "url": "https://github.com"
+            },
+            {
+                "label": "slack",
+                "url": "https://slack.com"
+            },
+            {
+                "label": "keep",
+                "url": "https://keep.google.com"
+            },
+            {
+                "label": "leetcode",
+                "url": "https://leetcode.com"
+            }
+        ]
+    },
+    {
+        "category": "ai",
+        "links": [
+            {
+                "label": "khas",
+                "url": "https://learn.khas.edu.tr/my/"
+            },
+            {
+                "label": "perplexity",
+                "url": "https://perplexity.ai"
+            },
+            {
+                "label": "claude",
+                "url": "https://claude.ai"
+            },
+            {
+                "label": "aistudio",
+                "url": "https://aistudio.google.com"
+            },
+            {
+                "label": "chatgpt",
+                "url": "https://chat.openai.com"
+            }
+        ]
+    },
+    {
+        "category": "social",
+        "links": [
+            {
+                "label": "youtube",
+                "url": "https://youtube.com"
+            },
+            {
+                "label": "reddit",
+                "url": "https://reddit.com"
+            },
+            {
+                "label": "twitter",
+                "url": "https://twitter.com"
+            },
+            {
+                "label": "feedly",
+                "url": "https://feedly.com"
+            }
+        ]
+    }
+]

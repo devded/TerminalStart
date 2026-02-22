@@ -560,10 +560,6 @@ a:hover .link-arrow {
     transition: all 150ms ease;
     font-family: "JetBrains Mono", monospace;
     margin-bottom: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 400px;
 }
 
 /* Meta line */

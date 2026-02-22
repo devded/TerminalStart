@@ -375,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isOnline = navigator.onLine;
   const mountTime = Date.now();
+  let pingHistory = [];
 
   function formatUptime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
@@ -393,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
       statusIndicator.className = "w-2 h-2 rounded-full bg-red-500";
       statusText.textContent = "Offline";
       if (statusPing) {
-        statusPing.textContent = "err";
+        statusPing.textContent = "---";
       }
     }
   }
@@ -408,26 +409,56 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   updateStatusDisplay();
 
-  // Measure Ping
+  // Measure Ping using DNS-over-HTTPS endpoint (more reliable for CORS)
   async function measurePing() {
     if (!isOnline || !statusPing) return;
-    const start = performance.now();
-    try {
-      await fetch(`https://www.google.com?_=${Date.now()}`, {
-        method: 'HEAD',
-        mode: 'no-cors',
-        cache: 'no-store',
-      });
-      const end = performance.now();
-      const latency = Math.round(end - start);
-      statusPing.textContent = latency === 0 ? "<1" : latency;
-    } catch {
-      statusPing.textContent = "err";
+    
+    const urls = [
+      "https://dns.google.com/resolve?name=google.com",
+      "https://cloudflare-dns.com/dns-query?name=google.com"
+    ];
+    
+    const results = [];
+    
+    for (const url of urls) {
+      try {
+        const start = performance.now();
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        
+        await fetch(url, {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeout);
+        const end = performance.now();
+        results.push(end - start);
+      } catch {
+        // Skip failed attempts
+      }
+    }
+    
+    if (results.length > 0) {
+      // Calculate average and add to history
+      const avgPing = Math.round(results.reduce((a, b) => a + b, 0) / results.length);
+      pingHistory.push(avgPing);
+      
+      // Keep last 5 measurements for smoothing
+      if (pingHistory.length > 5) pingHistory.shift();
+      
+      // Display smoothed average
+      const smoothed = Math.round(pingHistory.reduce((a, b) => a + b, 0) / pingHistory.length);
+      statusPing.textContent = smoothed;
+    } else {
+      statusPing.textContent = "---";
     }
   }
 
   measurePing();
-  setInterval(measurePing, 2000); // Ping every 2 seconds
+  setInterval(measurePing, 3000); // Ping every 3 seconds
 
   // Update Uptime
   setInterval(() => {

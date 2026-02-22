@@ -477,5 +477,82 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadLinks();
 
-});
+  // --- The Hacker News Feed (thehackernews.com) ---
+  const THN_RSS = 'https://feeds.feedburner.com/TheHackersNews';
+  const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 
+  function thnTimeAgo(dateStr) {
+    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    return `${Math.floor(seconds / 86400)}d ago`;
+  }
+
+  async function fetchHNStories() {
+    const feed = document.getElementById('hn-feed');
+    if (!feed) return;
+
+    feed.innerHTML = `<div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>`;
+
+    try {
+      const res = await fetch(CORS_PROXY + encodeURIComponent(THN_RSS));
+      if (!res.ok) throw new Error('Feed fetch failed');
+      const xmlText = await res.text();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(xmlText, 'text/xml');
+
+      // Check for parser errors
+      const parseError = xml.querySelector('parsererror');
+      if (parseError) throw new Error('XML parse error');
+
+      const items = xml.querySelectorAll('item');
+      if (!items || items.length === 0) throw new Error('No items in feed');
+
+      const stories = [];
+      items.forEach((item, idx) => {
+        if (idx >= 15) return; // limit to 15 stories
+        const title = item.querySelector('title')?.textContent ?? 'untitled';
+        const link = item.querySelector('link')?.textContent ?? 'https://thehackernews.com';
+        const pubDate = item.querySelector('pubDate')?.textContent ?? new Date().toISOString();
+        const categories = Array.from(item.querySelectorAll('category')).map(c => c.textContent).filter(Boolean).slice(0, 2);
+
+        stories.push({ title, link, pubDate, categories, idx });
+      });
+
+      const html = stories.map(({ idx, title, link, pubDate, categories }) => {
+        const num = String(idx + 1).padStart(2, '0');
+        const ago = thnTimeAgo(pubDate);
+        const catHtml = categories.map(c =>
+          `<span class="hn-tag">${c.toLowerCase()}</span>`
+        ).join('');
+
+        return `
+        <a href="${link}" target="_blank" rel="noopener noreferrer" class="hn-story">
+          <div class="hn-score">
+            <span class="hn-score-num">${num}</span>
+            <div class="hn-score-dot"></div>
+          </div>
+          <div style="min-width: 0;">
+            <div class="hn-title">${title}</div>
+            <div class="hn-meta">
+              ${catHtml}
+            </div>
+          </div>
+          <div class="hn-meta" style="white-space: nowrap;">${ago}</div>
+        </a>`;
+      }).join('');
+
+      feed.innerHTML = html;
+
+    } catch (err) {
+      console.error('THN feed error:', err);
+      feed.innerHTML = `<div class="hn-error">// could not fetch feed.<br/>check console for details.</div>`;
+    }
+  }
+
+  // Initial fetch + auto-refresh every 15 minutes
+  fetchHNStories();
+  setInterval(fetchHNStories, 15 * 60 * 1000);
+
+});

@@ -233,7 +233,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const weatherWind = document.getElementById("weather-wind");
   const weatherPrecip = document.getElementById("weather-precip");
   const weatherFeels = document.getElementById("weather-feels");
-  const forecastContainer = document.getElementById("weather-forecast");
+  const weatherLocation = document.getElementById("weather-location");
+  const weatherUv = document.getElementById("weather-uv");
+  const weatherVisibility = document.getElementById("weather-visibility");
+  const weatherPressure = document.getElementById("weather-pressure");
+  const dailyForecastContainer = document.getElementById("weather-daily-forecast");
 
   // Map WMO Weather Codes to text conditions
   function getWeatherConditionText(code, isDay = 1) {
@@ -255,6 +259,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Unknown";
   }
 
+  function getWeatherIcon(code) {
+    if (code === 0) return "☀️";
+    if (code === 1) return "🌤️";
+    if (code === 2) return "⛅";
+    if (code === 3) return "☁️";
+    if (code >= 45 && code <= 48) return "🌫️";
+    if (code >= 51 && code <= 57) return "🌦️";
+    if (code >= 61 && code <= 67) return "🌧️";
+    if (code >= 71 && code <= 77) return "🌨️";
+    if (code >= 80 && code <= 86) return "🌦️";
+    if (code >= 95) return "⛈️";
+    return "❓";
+  }
+
   async function fetchWeather() {
     try {
       // 1. Get approximate IP location
@@ -262,11 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const geoData = await geoRes.json();
       const lat = parseFloat(geoData.latitude);
       const lon = parseFloat(geoData.longitude);
+      const city = geoData.city || "--";
+
+      if (weatherLocation) weatherLocation.textContent = city;
 
       if (isNaN(lat) || isNaN(lon)) throw new Error("Location not found");
 
-      // 2. Fetch Open-Meteo data (Celsius)
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,is_day,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,visibility&hourly=temperature_2m,weather_code,precipitation_probability&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto`;
+      // 2. Fetch Open-Meteo data (Celsius) - expanded to include daily forecast
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,is_day,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,visibility,pressure_msl,uv_index&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=kmh&timezone=auto`;
 
       const weatherRes = await fetch(weatherUrl);
       const data = await weatherRes.json();
@@ -280,6 +301,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const humidityText = data.current.relative_humidity_2m + "%";
       const windText = Math.round(data.current.wind_speed_10m) + " km/h";
       const feelsLike = Math.round(data.current.apparent_temperature) + "°";
+      const uvIndex = Math.round(data.current.uv_index) || 0;
+      const visibility = Math.round(data.current.visibility / 1000) + " km";
+      const pressure = Math.round(data.current.pressure_msl) + " hPa";
 
       const currentHourIso = new Date().toISOString().substring(0, 13);
       let precipProb = "0%";
@@ -296,50 +320,43 @@ document.addEventListener("DOMContentLoaded", () => {
       if (weatherHumidity) weatherHumidity.textContent = humidityText;
       if (weatherWind) weatherWind.textContent = windText;
       if (weatherPrecip) weatherPrecip.textContent = precipProb;
-      if (weatherFeels) weatherFeels.textContent = feelsLike;
+      if (weatherFeels) weatherFeels.textContent = "feels " + feelsLike;
+      if (weatherUv) weatherUv.textContent = uvIndex;
+      if (weatherVisibility) weatherVisibility.textContent = visibility;
+      if (weatherPressure) weatherPressure.textContent = pressure;
 
-      // 4. Process hourly forecast (next 4 hours)
-      if (data.hourly && data.hourly.time && forecastContainer) {
-        let nowHourIndex = data.hourly.time.findIndex((t) =>
-          t.startsWith(currentHourIso)
-        );
+      // 4. Process daily forecast (next 7 days)
+      if (data.daily && data.daily.time && dailyForecastContainer) {
+        let dailyHtml = "";
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        
+        for (let i = 0; i < Math.min(7, data.daily.time.length); i++) {
+          const dateObj = new Date(data.daily.time[i]);
+          const dayName = i === 0 ? "Today" : days[dateObj.getDay()];
+          const highTemp = Math.round(data.daily.temperature_2m_max[i]);
+          const lowTemp = Math.round(data.daily.temperature_2m_min[i]);
+          const condition = getWeatherConditionText(data.daily.weather_code[i], 1).toLowerCase();
+          const icon = getWeatherIcon(data.daily.weather_code[i]);
+          const maxUv = Math.round(data.daily.uv_index_max[i]) || 0;
+          const maxPrecip = data.daily.precipitation_probability_max[i] || 0;
 
-        if (nowHourIndex === -1) {
-          // fallback generic start
-          nowHourIndex = 0;
+          dailyHtml += `
+<div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+        <span class="text-[var(--color-fg)] w-12">${dayName}</span>
+        <span class="text-base">${icon}</span>
+        <span class="text-[var(--color-muted)] text-[10px] truncate max-w-[80px] lowercase">${condition}</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="text-[var(--color-muted)] text-[10px]">uv ${maxUv}</span>
+        <span class="text-[var(--color-muted)] text-[10px] w-8 text-right">${maxPrecip}%</span>
+        <span class="text-[var(--color-fg)] font-medium">${highTemp}°</span>
+        <span class="text-[var(--color-muted)] opacity-60">${lowTemp}°</span>
+    </div>
+</div>`;
         }
 
-        const nextHours = [
-          nowHourIndex + 1,
-          nowHourIndex + 2,
-          nowHourIndex + 3,
-          nowHourIndex + 4,
-        ];
-
-        let forecastHtml = "";
-
-        nextHours.forEach(index => {
-          if (index < data.hourly.time.length) {
-            const t = data.hourly.time[index];
-            const temp = Math.round(data.hourly.temperature_2m[index]) + "°";
-            const condition = getWeatherConditionText(data.hourly.weather_code[index], 1).toLowerCase();
-
-            const dateObj = new Date(t);
-            const hours = dateObj.getHours();
-            const ampm = hours >= 12 ? "pm" : "am";
-            const hours12 = hours % 12 || 12;
-            const displayTime = `${hours12} ${ampm}`.padStart(5, " ");
-
-            forecastHtml += `
-<div class="flex items-center text-sm font-mono">
-    <span class="text-[var(--color-fg)] w-14 text-right mr-4">${displayTime}</span>
-    <span class="text-[var(--color-fg)] w-8">${temp}</span>
-    <span class="text-[var(--color-muted)] opacity-70 ml-2 truncate lowercase">${condition}</span>
-</div>`;
-          }
-        });
-
-        forecastContainer.innerHTML = forecastHtml;
+        dailyForecastContainer.innerHTML = dailyHtml;
       }
     } catch (e) {
       console.error("Error fetching weather:", e);

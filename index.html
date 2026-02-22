@@ -89,43 +89,59 @@
                 <div class="widget-title">forecast.py</div>
             </div>
             <div class="widget-content flex flex-col p-4 w-full h-full">
-                <div id="weather-temp" class="text-[52px] font-bold text-[var(--color-fg)] leading-none mb-2">
-                    5°
-                </div>
-                <div id="weather-condition" class="text-[var(--color-muted)] text-lg mb-4">
-                    overcast
-                </div>
-
-                <div class="grid grid-cols-2 gap-y-2 text-xs mb-auto">
-                    <div class="text-[var(--color-muted)]">
-                        humi
-                        <span id="weather-humidity" class="text-[var(--color-fg)]">82%</span>
+                <!-- Current Weather Header -->
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <div id="weather-temp" class="text-[52px] font-bold text-[var(--color-fg)] leading-none">
+                            5°
+                        </div>
+                        <div id="weather-condition" class="text-[var(--color-muted)] text-sm mt-1">
+                            overcast
+                        </div>
                     </div>
-                    <div class="text-[var(--color-muted)]">
-                        wind
-                        <span id="weather-wind" class="text-[var(--color-fg)]">13 mph</span>
-                    </div>
-                    <div class="text-[var(--color-muted)]">
-                        prec
-                        <span id="weather-precip" class="text-[var(--color-fg)]">3%</span>
-                    </div>
-                    <div class="text-[var(--color-muted)]">
-                        feel
-                        <span id="weather-feels" class="text-[var(--color-fg)]">1°</span>
+                    <div class="text-right">
+                        <div id="weather-location" class="text-xs text-[var(--color-fg)] font-medium">
+                            --
+                        </div>
+                        <div id="weather-feels" class="text-xs text-[var(--color-muted)] mt-1">
+                            feels 1°
+                        </div>
                     </div>
                 </div>
 
-                <div id="weather-forecast"
-                    class="border-t border-[var(--color-border)] mt-4 pt-4 text-xs font-mono space-y-1">
-                    <div class="grid grid-cols-[30px_30px_1fr]">
-                        <span class="text-[var(--color-fg)]">3 pm</span>
-                        <span class="text-[var(--color-fg)]">5°</span>
-                        <span class="text-[var(--color-muted)]">overcast</span>
+                <!-- Current Stats Grid -->
+                <div class="grid grid-cols-3 gap-2 text-xs mb-3">
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">humi</div>
+                        <div id="weather-humidity" class="text-[var(--color-fg)] font-medium">82%</div>
                     </div>
-                    <div class="grid grid-cols-[30px_30px_1fr]">
-                        <span class="text-[var(--color-fg)]">4 pm</span>
-                        <span class="text-[var(--color-fg)]">5°</span>
-                        <span class="text-[var(--color-muted)]">overcast</span>
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">wind</div>
+                        <div id="weather-wind" class="text-[var(--color-fg)] font-medium">13 km/h</div>
+                    </div>
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">precip</div>
+                        <div id="weather-precip" class="text-[var(--color-fg)] font-medium">3%</div>
+                    </div>
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">uv</div>
+                        <div id="weather-uv" class="text-[var(--color-fg)] font-medium">--</div>
+                    </div>
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">vis</div>
+                        <div id="weather-visibility" class="text-[var(--color-fg)] font-medium">-- km</div>
+                    </div>
+                    <div class="bg-[var(--color-hover)] rounded px-2 py-1.5">
+                        <div class="text-[var(--color-muted)] text-[10px] uppercase tracking-wider">pressure</div>
+                        <div id="weather-pressure" class="text-[var(--color-fg)] font-medium">-- hPa</div>
+                    </div>
+                </div>
+
+                <!-- Daily Forecast -->
+                <div class="border-t border-[var(--color-border)] pt-3 mt-auto">
+                    <div class="text-[10px] text-[var(--color-muted)] uppercase tracking-wider mb-2">7-day forecast</div>
+                    <div id="weather-daily-forecast" class="space-y-1.5 text-xs font-mono">
+                        <!-- Daily forecast items will be inserted here -->
                     </div>
                 </div>
             </div>

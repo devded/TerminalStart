@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="hn-score-num">${num}</span>
             <div class="hn-score-dot"></div>
           </div>
-          <div style="min-width: 0;">
+          <div>
             <div class="hn-title">${title}</div>
             <div class="hn-meta">
               ${catHtml}

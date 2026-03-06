@@ -48,8 +48,32 @@
 <body class="min-h-screen w-full p-2 text-sm bg-[var(--color-bg)] relative overflow-hidden select-none">
     <!-- Grid Container -->
     <div class="w-full h-[calc(100vh-2rem)] z-10 relative px-2 py-4 grid-container" id="grid-layout">
-        <!-- Search Widget -->
+        <!-- Nav Widget -->
         <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 1">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">nav.sh</div>
+            </div>
+            <div class="widget-content flex items-center gap-5 px-3 py-2">
+                <span id="attribution" class="text-[var(--color-muted)] opacity-30 hover:opacity-60 cursor-default text-xs font-mono transition-opacity mr-auto select-none">
+                    <span id="attribution-text">~/CSir.info</span>
+                </span>
+                <a href="index.html" class="nav-link current">
+                    <span style="color: var(--color-accent)">&gt;</span> dashboard
+                </a>
+                <a href="routine.html" class="nav-link">
+                    <span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh
+                </a>
+                <a href="browserpad.html" class="nav-link">
+                    <span style="color: var(--color-accent); opacity: 0.6">[→]</span> browserpad
+                </a>
+            </div>
+        </div>
+
+        <!-- Search Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 2">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -81,7 +105,7 @@
         </div>
 
         <!-- Weather Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 1; grid-row: 2 / span 2">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 1; grid-row: 3 / span 2">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -149,7 +173,7 @@
         </div>
 
         <!-- Status Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 2; grid-row: 2">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 2; grid-row: 3">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -176,7 +200,7 @@
         </div>
 
         <!-- Clock Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 3; grid-row: 2">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 3; grid-row: 3">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -206,7 +230,7 @@
         </div>
 
         <!-- GitHub Trending Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 3">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 4">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -259,7 +283,7 @@
         </div>
 
         <!-- Market / FX Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 1; grid-row: 4">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 1; grid-row: 5">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -272,7 +296,7 @@
         </div>
 
         <!-- Links Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 4">
+        <div class="widget widget-rounded widget-glow" style="grid-column: 2 / span 2; grid-row: 5">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
@@ -285,19 +309,21 @@
         </div>
 
         <!-- Hacker News Feed Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 5;">
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 6;">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
             <div class="widget-title-bar">
                 <div class="widget-title">feed.rss</div>
             </div>
-            <div class="widget-content p-0">
+            <div class="widget-content flex flex-col p-0">
+                <div class="flex items-center gap-2 px-3 py-1.5 border-b border-[var(--color-border)]">
+                    <button onclick="switchFeedTab('hn')" id="feed-tab-hn" class="feed-tab active">[hn]</button>
+                    <button onclick="switchFeedTab('security')" id="feed-tab-security" class="feed-tab">[security]</button>
+                    <button onclick="switchFeedTab('tech')" id="feed-tab-tech" class="feed-tab">[tech]</button>
+                </div>
                 <div id="hn-feed" class="hn-feed">
-                    <!-- Stories loaded by JS -->
-                    <div class="hn-loading">
-                        <span class="hn-loading-text">fetching stories...</span>
-                    </div>
+                    <div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>
                 </div>
             </div>
         </div>

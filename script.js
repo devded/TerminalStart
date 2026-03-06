@@ -1,5 +1,7 @@
 // TerminalStart Simple Logic File
 
+const PROXY = "https://cors-proxy-server-zeta.vercel.app";
+
 document.addEventListener("DOMContentLoaded", () => {
   // Clock Logic
   function updateClock() {
@@ -465,83 +467,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadLinks();
 
-  // --- The Hacker News Feed (thehackernews.com) ---
-  const THN_RSS = 'https://feeds.feedburner.com/TheHackersNews';
-  const CORS_PROXY = 'https://proxy.corsfix.com/?';
+  // --- News Feed ---
+  const FEED_SOURCES = {
+    hn: { type: 'json', url: 'https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=15' },
+    security: { type: 'rss', url: 'https://www.bleepingcomputer.com/feed/', label: 'bleepingcomputer' },
+    tech: { type: 'rss', url: 'https://feeds.arstechnica.com/arstechnica/index', label: 'arstechnica' },
+  };
 
-  function thnTimeAgo(dateStr) {
-    const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  let currentFeedTab = 'hn';
+  const feedCache = {};
+
+  function feedTimeAgo(date) {
+    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
     return `${Math.floor(seconds / 86400)}d ago`;
   }
 
-  async function fetchHNStories() {
+  function renderFeedStory(idx, title, link, meta, ago) {
+    const num = String(idx + 1).padStart(2, '0');
+    return `
+      <a href="${link}" target="_blank" rel="noopener noreferrer" class="hn-story">
+        <div class="hn-score">
+          <span class="hn-score-num">${num}</span>
+          <div class="hn-score-dot"></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="hn-title">${title}</div>
+          <div class="hn-meta">${meta}</div>
+        </div>
+        <div class="hn-meta" style="white-space:nowrap">${ago}</div>
+      </a>`;
+  }
+
+  async function loadFeedTab(tab) {
     const feed = document.getElementById('hn-feed');
     if (!feed) return;
+    feed.innerHTML = `<div class="hn-loading"><span class="hn-loading-text">fetching ${tab}...</span></div>`;
 
-    feed.innerHTML = `<div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>`;
+    if (feedCache[tab]) { feed.innerHTML = feedCache[tab]; return; }
 
+    const src = FEED_SOURCES[tab];
     try {
-      const res = await fetch(CORS_PROXY + THN_RSS);
-      if (!res.ok) throw new Error('Feed fetch failed');
-      const xmlText = await res.text();
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(xmlText, 'text/xml');
+      if (src.type === 'json') {
+        const res = await fetch(src.url);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        feedCache[tab] = (data.hits ?? []).map((hit, idx) => renderFeedStory(
+          idx,
+          hit.title ?? 'untitled',
+          hit.url ?? `https://news.ycombinator.com/item?id=${hit.objectID}`,
+          `<span class="hn-tag">${hit.points ?? 0}pts</span><span class="hn-tag">${hit.num_comments ?? 0} comments</span>`,
+          feedTimeAgo(hit.created_at)
+        )).join('');
 
-      // Check for parser errors
-      const parseError = xml.querySelector('parsererror');
-      if (parseError) throw new Error('XML parse error');
+      } else {
+        const res = await fetch(`${PROXY}/?url=${encodeURIComponent(src.url)}`);
+        if (!res.ok) throw new Error();
+        const xml = new DOMParser().parseFromString(await res.text(), 'text/xml');
+        if (xml.querySelector('parsererror')) throw new Error('parse error');
+        const items = Array.from(xml.querySelectorAll('item')).slice(0, 15);
+        feedCache[tab] = items.map((item, idx) => {
+          const title = item.querySelector('title')?.textContent ?? 'untitled';
+          const linkEl = item.querySelector('link');
+          const link = linkEl?.getAttribute('href') || linkEl?.nextSibling?.textContent?.trim() || linkEl?.textContent?.trim() || '#';
+          const pubDate = item.querySelector('pubDate')?.textContent ?? '';
+          return renderFeedStory(idx, title, link, `<span class="hn-tag">${src.label}</span>`, pubDate ? feedTimeAgo(pubDate) : '');
+        }).join('');
+      }
 
-      const items = xml.querySelectorAll('item');
-      if (!items || items.length === 0) throw new Error('No items in feed');
-
-      const stories = [];
-      items.forEach((item, idx) => {
-        if (idx >= 15) return; // limit to 15 stories
-        const title = item.querySelector('title')?.textContent ?? 'untitled';
-        const link = item.querySelector('link')?.textContent ?? 'https://thehackernews.com';
-        const pubDate = item.querySelector('pubDate')?.textContent ?? new Date().toISOString();
-        const categories = Array.from(item.querySelectorAll('category')).map(c => c.textContent).filter(Boolean).slice(0, 2);
-
-        stories.push({ title, link, pubDate, categories, idx });
-      });
-
-      const html = stories.map(({ idx, title, link, pubDate, categories }) => {
-        const num = String(idx + 1).padStart(2, '0');
-        const ago = thnTimeAgo(pubDate);
-        const catHtml = categories.map(c =>
-          `<span class="hn-tag">${c.toLowerCase()}</span>`
-        ).join('');
-
-        return `
-        <a href="${link}" target="_blank" rel="noopener noreferrer" class="hn-story">
-          <div class="hn-score">
-            <span class="hn-score-num">${num}</span>
-            <div class="hn-score-dot"></div>
-          </div>
-          <div>
-            <div class="hn-title">${title}</div>
-            <div class="hn-meta">
-              ${catHtml}
-            </div>
-          </div>
-          <div class="hn-meta" style="white-space: nowrap;">${ago}</div>
-        </a>`;
-      }).join('');
-
-      feed.innerHTML = html;
-
+      feed.innerHTML = feedCache[tab];
     } catch (err) {
-      console.error('THN feed error:', err);
-      feed.innerHTML = `<div class="hn-error">// could not fetch feed.<br/>check console for details.</div>`;
+      feed.innerHTML = `<div class="hn-error">// could not fetch ${tab} feed.</div>`;
     }
   }
 
-  // Initial fetch + auto-refresh every 15 minutes
-  fetchHNStories();
-  setInterval(fetchHNStories, 15 * 60 * 1000);
+  window.switchFeedTab = function(tab) {
+    currentFeedTab = tab;
+    document.querySelectorAll('.feed-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(`feed-tab-${tab}`)?.classList.add('active');
+    loadFeedTab(tab);
+  };
+
+  // Initial load + auto-refresh every 15 min (clears cache to refetch)
+  loadFeedTab('hn');
+  setInterval(() => { Object.keys(feedCache).forEach(k => delete feedCache[k]); loadFeedTab(currentFeedTab); }, 15 * 60 * 1000);
 
   // --- Routine Now Strip ---
   const ROUTINE_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

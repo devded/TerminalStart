@@ -633,4 +633,97 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadRoutineNow();
 
+  // --- Market FX Widget ---
+  const FX_PAIRS = [
+    { label: 'USD / BDT', base: 'usd', quote: 'bdt' },
+    { label: 'USD / TRY', base: 'usd', quote: 'try' },
+    { label: 'GBP / TRY', base: 'gbp', quote: 'try' },
+    { label: 'GBP / USD', base: 'gbp', quote: 'usd' },
+    { label: 'USD / EUR', base: 'usd', quote: 'eur' },
+    { label: 'CAD / EUR', base: 'cad', quote: 'eur' },
+  ];
+
+  function fxDateStr(daysAgo) {
+    const d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    return d.toISOString().split('T')[0];
+  }
+
+  function fxCrossRate(dayData, base, quote) {
+    // dayData keyed by base currency, values are objects of quote->rate
+    const usdRates = dayData['usd'];
+    if (!usdRates) return null;
+    if (base === 'usd') return usdRates[quote] ?? null;
+    // cross: base/quote = (usd/quote) / (usd/base)
+    const usdBase = usdRates[base];
+    const usdQuote = usdRates[quote];
+    if (!usdBase || !usdQuote) return null;
+    return usdQuote / usdBase;
+  }
+
+  function fxSparkline(values, color) {
+    const W = 52, H = 18, pad = 1;
+    const min = Math.min(...values), max = Math.max(...values);
+    const range = max - min || 1;
+    const pts = values.map((v, i) => {
+      const x = pad + (i / (values.length - 1)) * (W - pad * 2);
+      const y = H - pad - ((v - min) / range) * (H - pad * 2);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
+      <circle cx="${pts.split(' ').at(-1).split(',')[0]}" cy="${pts.split(' ').at(-1).split(',')[1]}" r="1.8" fill="${color}"/>
+    </svg>`;
+  }
+
+  function fxFmt(n) {
+    return n >= 100 ? n.toFixed(2) : n >= 10 ? n.toFixed(3) : n.toFixed(4);
+  }
+
+  async function loadFXRates() {
+    const container = document.getElementById('fx-container');
+    if (!container) return;
+    try {
+      // Fetch last 7 days from fawazahmed0 currency API (free, via jsDelivr)
+      const dates = Array.from({ length: 7 }, (_, i) => fxDateStr(6 - i));
+      const snapshots = await Promise.all(dates.map(async date => {
+        const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${date}/v1/currencies/usd.min.json`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const json = await res.json();
+        // Returns { date, usd: { bdt: ..., try: ..., gbp: ..., ... } }
+        return { usd: json.usd };
+      }));
+
+      const valid = snapshots.filter(Boolean);
+      if (!valid.length) throw new Error('no data');
+
+      container.innerHTML = FX_PAIRS.map(p => {
+        const series = valid.map(s => fxCrossRate(s, p.base, p.quote)).filter(v => v !== null);
+        const current = series.at(-1);
+        const first = series[0];
+        const pct = ((current - first) / first) * 100;
+        const up = pct >= 0;
+        const color = up ? '#4ade80' : '#f87171';
+        const pctStr = (up ? '+' : '') + pct.toFixed(2) + '%';
+        const spark = series.length >= 2 ? fxSparkline(series, color) : '';
+        return `
+          <div class="flex items-center gap-2 font-mono">
+            <span class="text-[var(--color-muted)] text-[10px] uppercase tracking-wide w-[72px] shrink-0">${p.label}</span>
+            <span class="text-[var(--color-fg)] font-bold text-[12px] w-[52px] text-right shrink-0">${fxFmt(current)}</span>
+            <span class="text-[10px] w-[42px] text-right shrink-0" style="color:${color}">${pctStr}</span>
+            <span class="shrink-0">${spark}</span>
+          </div>`;
+      }).join('') +
+        `<div class="text-[9px] text-[var(--color-muted)] opacity-30 mt-1 font-mono">7d · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+
+    } catch (e) {
+      const c = document.getElementById('fx-container');
+      if (c) c.innerHTML = `<div class="text-[var(--color-muted)] text-[10px] font-mono opacity-40">// could not fetch rates</div>`;
+    }
+  }
+
+  loadFXRates();
+  setInterval(loadFXRates, 5 * 60 * 1000);
+
 });

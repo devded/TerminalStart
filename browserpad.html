@@ -210,7 +210,7 @@
             align-items: stretch;
             border-bottom: 1px solid var(--color-border);
             background: var(--color-hover);
-            padding: 0 0.5rem;
+            padding: 0.5rem 0.5rem 0;
             gap: 0.25rem;
             flex-shrink: 0;
             overflow-x: auto;
@@ -287,25 +287,16 @@
 
 <body>
     <div class="pad-shell">
-        <!-- nav.sh widget -->
-        <div class="widget widget-rounded widget-glow" id="nav-widget" style="flex-shrink:0;margin-bottom:0.5rem">
-            <svg style="position:absolute;top:-1px;left:-1px;width:100%;height:100%;pointer-events:none;z-index:10;overflow:visible">
-                <path class="widget-glow-border" id="nav-glow-path" fill="none" stroke="var(--color-accent)" stroke-width="1" />
-            </svg>
-            <div class="widget-title-bar">
-                <div class="widget-title">nav.sh</div>
-            </div>
-            <div style="padding:0.25rem 1rem 0.45rem;display:flex;align-items:center;gap:1.25rem">
-                <a href="index.html" class="nav-link">
-                    <span style="color:var(--color-accent);opacity:0.6">[←]</span> dashboard
-                </a>
-                <a href="routine.html" class="nav-link">
-                    <span style="color:var(--color-accent);opacity:0.6">[→]</span> routine.sh
-                </a>
-                <a href="browserpad.html" class="nav-link current">
-                    <span style="color:var(--color-accent)">&gt;</span> browserpad
-                </a>
-            </div>
+        <!-- Slim Horizontal Nav Bar -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding: 0 0.5rem 0.35rem; border-bottom: 1px solid var(--color-border); margin-bottom: 0.5rem; flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:0.75rem;">
+            <span id="attribution" style="color:var(--color-muted); opacity:0.3; cursor:default; transition:opacity 0.2s;" onmouseenter="this.style.opacity=0.6" onmouseleave="this.style.opacity=0.3">
+                <span id="attribution-text">~/CSir.info</span>
+            </span>
+            <nav style="display:flex; align-items:center; gap:1rem;">
+                <a href="index.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> dashboard</a>
+                <a href="routine.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh</a>
+                <a href="browserpad.html" class="nav-link current"><span style="color: var(--color-accent)">&gt;</span> browserpad</a>
+            </nav>
         </div>
 
         <!-- Writing area wrapper -->
@@ -554,21 +545,6 @@
                 svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
             }
 
-            // nav widget border (gap under "nav.sh" title)
-            const nav  = document.getElementById('nav-widget');
-            const navPath = document.getElementById('nav-glow-path');
-            if (nav && navPath) {
-                const w = nav.offsetWidth;
-                const h = nav.offsetHeight;
-                const titleEl = nav.querySelector('.widget-title');
-                const sx = titleEl ? titleEl.offsetWidth + 24 : 80;
-                const d = `M${sx},0.5 L${w - 0.5},0.5 L${w - 0.5},${h - 0.5} L0.5,${h - 0.5} L0.5,0.5 L${sx},0.5`;
-                navPath.setAttribute('d', d);
-                const perimeter = 2 * w + 2 * h;
-                navPath.setAttribute('stroke-dasharray', perimeter);
-                navPath.style.setProperty('--perimeter', perimeter);
-                nav.querySelector('svg').setAttribute('viewBox', `0 0 ${w} ${h}`);
-            }
         }
 
         // ── Keyboard shortcuts ─────────────────────────────────

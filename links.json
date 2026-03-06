@@ -3,6 +3,10 @@
         "category": "work",
         "links": [
             {
+                "label": "routine",
+                "url": "routine.html"
+            },
+            {
                 "label": "khas",
                 "url": "https://learn.khas.edu.tr/my/"
             },

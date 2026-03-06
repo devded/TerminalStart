@@ -543,4 +543,94 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchHNStories();
   setInterval(fetchHNStories, 15 * 60 * 1000);
 
+  // --- Routine Now Strip ---
+  const ROUTINE_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  function routineTimeToMin(str) {
+    const [h, m] = str.split(':').map(Number);
+    return h < 10 ? h * 60 + m + 1440 : h * 60 + m;
+  }
+
+  function routineNowMin() {
+    const now = new Date();
+    const m = now.getHours() * 60 + now.getMinutes();
+    return now.getHours() < 10 ? m + 1440 : m;
+  }
+
+  async function loadRoutineNow() {
+    const strip = document.getElementById('routine-now-strip');
+    if (!strip) return;
+    try {
+      const res = await fetch('routine.json');
+      if (!res.ok) return;
+      const data = await res.json();
+
+      function render() {
+        const dayIdx = new Date().getDay();
+        const today = ROUTINE_DAYS[dayIdx === 0 ? 6 : dayIdx - 1];
+        const blocks = data.routine[today];
+        if (!blocks) return;
+        const nowM = routineNowMin();
+        const idx = blocks.findIndex(b => {
+          const [s, e] = b.time.split('–').map(t => routineTimeToMin(t.trim()));
+          return nowM >= s && nowM < e;
+        });
+        if (idx === -1) { strip.style.display = 'none'; return; }
+
+        const block = blocks[idx];
+        document.getElementById('routine-now-icon').textContent = block.icon;
+        document.getElementById('routine-now-block').textContent = block.block;
+        document.getElementById('routine-now-time').textContent = block.time;
+        document.getElementById('routine-now-task').textContent = '> ' + block.a.task;
+
+        const next = blocks[idx + 1] || null;
+        const divider = document.getElementById('routine-next-divider');
+        const nextWrap = document.getElementById('routine-next-wrap');
+        if (next) {
+          document.getElementById('routine-next-icon').textContent = next.icon;
+          document.getElementById('routine-next-block').textContent = next.block;
+          document.getElementById('routine-next-time').textContent = next.time;
+          document.getElementById('routine-next-task').textContent = '> ' + next.a.task;
+          divider.style.display = '';
+          nextWrap.style.display = 'flex';
+        } else {
+          divider.style.display = 'none';
+          nextWrap.style.display = 'none';
+        }
+
+        strip.style.display = 'flex';
+
+        // Upcoming strip (bottom widget) — blocks after "next"
+        const upcomingStrip = document.getElementById('routine-upcoming-strip');
+        const upcomingBlocks = document.getElementById('routine-upcoming-blocks');
+        if (upcomingStrip && upcomingBlocks) {
+          const future = blocks.slice(idx + 2, idx + 6); // up to 4 upcoming
+          if (future.length) {
+            upcomingBlocks.innerHTML = future.map((b, i) => `
+              <div class="flex items-center gap-2 px-3 py-1.5 min-w-0 flex-1" style="${i > 0 ? 'border-left: 1px solid var(--color-border)' : ''}">
+                <span class="text-sm leading-none shrink-0 opacity-50">${b.icon}</span>
+                <div class="flex flex-col min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[var(--color-muted)] font-mono font-bold text-[10px] uppercase tracking-wide truncate opacity-70">${b.block}</span>
+                  </div>
+                  <span class="text-[var(--color-muted)] font-mono text-[9px] opacity-40">${b.time}</span>
+                </div>
+              </div>
+            `).join('');
+            upcomingStrip.style.display = 'flex';
+          } else {
+            upcomingStrip.style.display = 'none';
+          }
+        }
+      }
+
+      render();
+      setInterval(render, 60000);
+    } catch (e) {
+      // silently fail — strip stays hidden
+    }
+  }
+
+  loadRoutineNow();
+
 });

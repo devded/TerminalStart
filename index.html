@@ -211,13 +211,49 @@
                 <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
             </svg>
             <div class="widget-title-bar">
-                <div class="widget-title">trending.git</div>
+                <div class="widget-title">pulse.sh</div>
             </div>
             <div class="widget-content flex flex-col h-full p-0">
+                <!-- Routine Now Strip -->
+                <a href="routine.html" id="routine-now-strip"
+                    class="flex gap-3 px-3 py-2 border-b border-[var(--color-border)] hover:bg-[var(--color-hover)] transition-colors"
+                    style="text-decoration:none; display:none;">
+                    <!-- Current block -->
+                    <div class="flex items-start gap-2 flex-1 min-w-0">
+                        <span id="routine-now-icon" class="text-base leading-none shrink-0 mt-0.5"></span>
+                        <div class="flex flex-col min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <span id="routine-now-block" class="text-[var(--color-fg)] font-bold font-mono text-[11px] uppercase tracking-wide truncate"></span>
+                                <span class="text-[9px] text-[var(--color-accent)] border border-[var(--color-accent)] px-1 leading-tight shrink-0" style="animation: now-pulse 2s ease-in-out infinite">now</span>
+                                <span id="routine-now-time" class="text-[var(--color-muted)] font-mono text-[10px] shrink-0 ml-auto"></span>
+                            </div>
+                            <span id="routine-now-task" class="text-[var(--color-muted)] font-mono text-[10px] truncate mt-0.5"></span>
+                        </div>
+                    </div>
+                    <!-- Divider -->
+                    <div id="routine-next-divider" class="w-px bg-[var(--color-border)] self-stretch shrink-0 mx-1" style="display:none"></div>
+                    <!-- Next block -->
+                    <div id="routine-next-wrap" class="flex items-start gap-2 flex-1 min-w-0" style="display:none">
+                        <span id="routine-next-icon" class="text-base leading-none shrink-0 mt-0.5 opacity-50"></span>
+                        <div class="flex flex-col min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <span id="routine-next-block" class="text-[var(--color-muted)] font-bold font-mono text-[11px] uppercase tracking-wide truncate"></span>
+                                <span class="text-[9px] text-[var(--color-muted)] border border-[var(--color-border)] px-1 leading-tight shrink-0 opacity-60">next</span>
+                                <span id="routine-next-time" class="text-[var(--color-muted)] font-mono text-[10px] shrink-0 ml-auto opacity-60"></span>
+                            </div>
+                            <span id="routine-next-task" class="text-[var(--color-muted)] font-mono text-[10px] truncate mt-0.5 opacity-60"></span>
+                        </div>
+                    </div>
+                </a>
                 <div id="github-trending" class="github-feed overflow-y-auto">
                     <div class="hn-loading">
                         <span class="hn-loading-text">fetching trending repos...</span>
                     </div>
+                </div>
+                <!-- Routine Upcoming -->
+                <div id="routine-upcoming-strip" class="flex items-stretch border-t border-[var(--color-border)]" style="display:none">
+                    <a href="routine.html" class="text-[9px] font-mono text-[var(--color-muted)] opacity-40 uppercase tracking-widest px-3 flex items-center shrink-0 hover:opacity-70 transition-opacity" style="text-decoration:none; border-right: 1px solid var(--color-border)">upcoming</a>
+                    <div id="routine-upcoming-blocks" class="flex flex-1 min-w-0 overflow-hidden"></div>
                 </div>
             </div>
         </div>

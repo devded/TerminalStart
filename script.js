@@ -634,34 +634,21 @@ document.addEventListener("DOMContentLoaded", () => {
   loadRoutineNow();
 
   // --- Market FX Widget ---
+  // --- Market FX Widget ---
+  // Pairs: [label, frankfurter-base, frankfurter-quote] — BDT handled separately via open.er-api
   const FX_PAIRS = [
-    { label: 'USD / BDT', base: 'usd', quote: 'bdt' },
-    { label: 'USD / TRY', base: 'usd', quote: 'try' },
-    { label: 'GBP / TRY', base: 'gbp', quote: 'try' },
-    { label: 'GBP / USD', base: 'gbp', quote: 'usd' },
-    { label: 'USD / EUR', base: 'usd', quote: 'eur' },
-    { label: 'CAD / EUR', base: 'cad', quote: 'eur' },
+    { label: 'USD / BDT', base: 'USD', quote: 'BDT', bdt: true },
+    { label: 'USD / TRY', base: 'USD', quote: 'TRY' },
+    { label: 'GBP / TRY', base: 'GBP', quote: 'TRY' },
+    { label: 'GBP / USD', base: 'GBP', quote: 'USD' },
+    { label: 'USD / EUR', base: 'USD', quote: 'EUR' },
+    { label: 'CAD / EUR', base: 'CAD', quote: 'EUR' },
   ];
 
-  function fxDateStr(daysAgo) {
-    const d = new Date();
-    d.setDate(d.getDate() - daysAgo);
-    return d.toISOString().split('T')[0];
-  }
 
-  function fxCrossRate(dayData, base, quote) {
-    // dayData keyed by base currency, values are objects of quote->rate
-    const usdRates = dayData['usd'];
-    if (!usdRates) return null;
-    if (base === 'usd') return usdRates[quote] ?? null;
-    // cross: base/quote = (usd/quote) / (usd/base)
-    const usdBase = usdRates[base];
-    const usdQuote = usdRates[quote];
-    if (!usdBase || !usdQuote) return null;
-    return usdQuote / usdBase;
-  }
 
   function fxSparkline(values, color) {
+    if (values.length < 2) return '';
     const W = 52, H = 18, pad = 1;
     const min = Math.min(...values), max = Math.max(...values);
     const range = max - min || 1;
@@ -670,9 +657,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const y = H - pad - ((v - min) / range) * (H - pad * 2);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     }).join(' ');
+    const last = pts.split(' ').at(-1).split(',');
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
       <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
-      <circle cx="${pts.split(' ').at(-1).split(',')[0]}" cy="${pts.split(' ').at(-1).split(',')[1]}" r="1.8" fill="${color}"/>
+      <circle cx="${last[0]}" cy="${last[1]}" r="1.8" fill="${color}"/>
     </svg>`;
   }
 
@@ -680,40 +668,74 @@ document.addEventListener("DOMContentLoaded", () => {
     return n >= 100 ? n.toFixed(2) : n >= 10 ? n.toFixed(3) : n.toFixed(4);
   }
 
+  function fxRow(label, series, current) {
+    const first = series[0] ?? current;
+    const pct = ((current - first) / first) * 100;
+    const up = pct >= 0;
+    const color = up ? '#4ade80' : '#f87171';
+    const pctStr = (up ? '+' : '') + pct.toFixed(2) + '%';
+    const spark = fxSparkline(series, color);
+    return `<div class="flex items-center gap-2 font-mono">
+      <span class="text-[var(--color-muted)] text-[10px] uppercase tracking-wide w-[72px] shrink-0">${label}</span>
+      <span class="text-[var(--color-fg)] font-bold text-[12px] w-[52px] text-right shrink-0">${fxFmt(current)}</span>
+      <span class="text-[10px] w-[42px] text-right shrink-0" style="color:${color}">${pctStr}</span>
+      <span class="shrink-0">${spark}</span>
+    </div>`;
+  }
+
   async function loadFXRates() {
     const container = document.getElementById('fx-container');
     if (!container) return;
     try {
-      // Fetch last 7 days from fawazahmed0 currency API (Cloudflare Pages mirror)
-      const CORS = 'https://cors-proxy-server-zeta.vercel.app/?url=';
-      const dates = Array.from({ length: 7 }, (_, i) => fxDateStr(6 - i));
-      const snapshots = await Promise.all(dates.map(async date => {
-        const apiUrl = `https://${date}.currency-api.pages.dev/v1/currencies/usd.min.json`;
-        const res = await fetch(CORS + encodeURIComponent(apiUrl));
-        if (!res.ok) return null;
-        const json = await res.json();
-        return { usd: json.usd };
-      }));
+      // 1. Current rates for all currencies (includes BDT) — open.er-api.com, free, no key, CORS-enabled
+      const currentRes = await fetch('https://open.er-api.com/v6/latest/USD');
+      if (!currentRes.ok) throw new Error('current rates failed');
+      const currentData = await currentRes.json();
+      const rates = currentData.rates; // { BDT, TRY, GBP, EUR, CAD, ... }
 
-      const valid = snapshots.filter(Boolean);
-      if (!valid.length) throw new Error('no data');
+      // 2. 7-day history for non-BDT pairs — api.frankfurter.app, free, CORS-enabled
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 7);
+      const startStr = startDate.toISOString().split('T')[0];
+      const endStr = new Date().toISOString().split('T')[0];
+      const histUrl = `https://api.frankfurter.app/${startStr}..${endStr}?from=USD&to=EUR,TRY,GBP,CAD`;
+      const histRes = await fetch(histUrl);
+      if (!histRes.ok) throw new Error('history failed');
+      const histData = await histRes.json();
+      // histData.rates = { "2024-03-01": { EUR, TRY, GBP, CAD }, ... }
+      const days = Object.keys(histData.rates).sort();
+      const usdDayRates = days.map(d => histData.rates[d]); // array of { EUR, TRY, GBP, CAD }
+
+      // cross rate from USD-base day snapshot
+      function crossSeries(base, quote) {
+        return usdDayRates.map(dr => {
+          if (base === 'USD') return dr[quote];
+          if (quote === 'USD') return dr[base] ? 1 / dr[base] : null;
+          return (dr[base] && dr[quote]) ? dr[quote] / dr[base] : null;
+        }).filter(v => v !== null);
+      }
+
+      // 3. BDT history from localStorage (accumulates over visits)
+      const todayKey = endStr;
+      const bdtStore = JSON.parse(localStorage.getItem('fx_bdt') || '{}');
+      bdtStore[todayKey] = rates['BDT'];
+      // prune to last 30 days
+      const pruned = {};
+      Object.keys(bdtStore).sort().slice(-30).forEach(k => pruned[k] = bdtStore[k]);
+      localStorage.setItem('fx_bdt', JSON.stringify(pruned));
+      const bdtSeries = Object.keys(pruned).sort().slice(-7).map(k => pruned[k]);
 
       container.innerHTML = FX_PAIRS.map(p => {
-        const series = valid.map(s => fxCrossRate(s, p.base, p.quote)).filter(v => v !== null);
-        const current = series.at(-1);
-        const first = series[0];
-        const pct = ((current - first) / first) * 100;
-        const up = pct >= 0;
-        const color = up ? '#4ade80' : '#f87171';
-        const pctStr = (up ? '+' : '') + pct.toFixed(2) + '%';
-        const spark = series.length >= 2 ? fxSparkline(series, color) : '';
-        return `
-          <div class="flex items-center gap-2 font-mono">
-            <span class="text-[var(--color-muted)] text-[10px] uppercase tracking-wide w-[72px] shrink-0">${p.label}</span>
-            <span class="text-[var(--color-fg)] font-bold text-[12px] w-[52px] text-right shrink-0">${fxFmt(current)}</span>
-            <span class="text-[10px] w-[42px] text-right shrink-0" style="color:${color}">${pctStr}</span>
-            <span class="shrink-0">${spark}</span>
-          </div>`;
+        if (p.bdt) {
+          return fxRow(p.label, bdtSeries, rates['BDT']);
+        }
+        const series = crossSeries(p.base, p.quote);
+        const current = (() => {
+          if (p.base === 'USD') return rates[p.quote];
+          if (p.quote === 'USD') return rates[p.base] ? 1 / rates[p.base] : 0;
+          return (rates[p.base] && rates[p.quote]) ? rates[p.quote] / rates[p.base] : 0;
+        })();
+        return fxRow(p.label, series, current);
       }).join('') +
         `<div class="text-[9px] text-[var(--color-muted)] opacity-30 mt-1 font-mono">7d · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
 

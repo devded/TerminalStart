@@ -684,14 +684,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('fx-container');
     if (!container) return;
     try {
-      // Fetch last 7 days from fawazahmed0 currency API (free, via jsDelivr)
+      // Fetch last 7 days from fawazahmed0 currency API (Cloudflare Pages mirror)
+      const CORS = 'https://cors-proxy-server-zeta.vercel.app/?url=';
       const dates = Array.from({ length: 7 }, (_, i) => fxDateStr(6 - i));
       const snapshots = await Promise.all(dates.map(async date => {
-        const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${date}/v1/currencies/usd.min.json`;
-        const res = await fetch(url);
+        const apiUrl = `https://${date}.currency-api.pages.dev/v1/currencies/usd.min.json`;
+        const res = await fetch(CORS + encodeURIComponent(apiUrl));
         if (!res.ok) return null;
         const json = await res.json();
-        // Returns { date, usd: { bdt: ..., try: ..., gbp: ..., ... } }
         return { usd: json.usd };
       }));
 

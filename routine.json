@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "wake": "10:00",
+    "sleep": "01:00",
+    "class_days": ["Mon", "Tue", "Wed"],
+    "class_time": "19:00–23:00",
+    "ab_rule": "A and B are always different types — if A is freelance, B is academic or skill, never the same category"
+  },
+  "routine": {
+    "Mon": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Shower · stretch · light breakfast" },
+        "b": { "type": "personal", "task": "Coffee + write down your 3 goals for today before opening any app" }
+      },
+      {
+        "time": "10:30–12:30", "block": "Deep Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Work on active client deliverable — code, design, or writing" },
+        "b": { "type": "academic", "task": "Read 2 academic papers and write a short summary for each" }
+      },
+      {
+        "time": "12:30–13:30", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Watch or read one module from your skill course" },
+        "b": { "type": "freelance", "task": "Send 2 client proposals or update your portfolio with recent work" }
+      },
+      {
+        "time": "13:30–14:30", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook a proper warm meal — eat away from your desk" },
+        "b": { "type": "personal", "task": "Meal prep 2 portions while cooking so tomorrow's lunch is ready" }
+      },
+      {
+        "time": "14:30–17:30", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Review lecture notes + prepare questions for tonight's class" },
+        "b": { "type": "skill", "task": "Practice your skill hands-on — build a mini exercise or experiment" }
+      },
+      {
+        "time": "17:30–18:30", "block": "Transition", "icon": "🎒",
+        "a": { "type": "personal", "task": "Head to uni · listen to a podcast on the way" },
+        "b": { "type": "academic", "task": "Skim tonight's lecture slides for 15 min before leaving" }
+      },
+      {
+        "time": "19:00–23:00", "block": "Class", "icon": "🎓",
+        "a": { "type": "class", "task": "Attend class · take active notes in your own words" },
+        "b": { "type": "class", "task": "Engage — ask at least 1 question or contribute to discussion" }
+      },
+      {
+        "time": "23:00–00:30", "block": "Wind Down", "icon": "🌙",
+        "a": { "type": "freelance", "task": "Reply to client messages · send updates or deliverables" },
+        "b": { "type": "academic", "task": "Write a 5-min summary of what you learned in class tonight" }
+      },
+      {
+        "time": "00:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Light snack · read fiction or watch something short" },
+        "b": { "type": "personal", "task": "Write 3 lines in a journal — what went well today" }
+      }
+    ],
+    "Tue": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Shower · breakfast · no phone for first 20 min" },
+        "b": { "type": "personal", "task": "Morning stretch · coffee · set one intention for the day" }
+      },
+      {
+        "time": "10:30–12:30", "block": "Deep Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Continue active project — focused 2h sprint" },
+        "b": { "type": "academic", "task": "Work on an assignment — complete at least one full section" }
+      },
+      {
+        "time": "12:30–13:30", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Skill course — next module or chapter" },
+        "b": { "type": "freelance", "task": "Fix, test, review, or polish a pending client deliverable" }
+      },
+      {
+        "time": "13:30–14:30", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook lunch — try one new ingredient or dish this week" },
+        "b": { "type": "personal", "task": "Use yesterday's meal prep + take a walk after eating" }
+      },
+      {
+        "time": "14:30–17:30", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Work on one assignment from start to finish — stay until done" },
+        "b": { "type": "skill", "task": "Practice your skill with a real use case — document what you build" }
+      },
+      {
+        "time": "17:30–18:30", "block": "Transition", "icon": "🎒",
+        "a": { "type": "personal", "task": "Head to uni · decompress with music on the way" },
+        "b": { "type": "academic", "task": "Quick review of tonight's lecture topic — 15 min skim" }
+      },
+      {
+        "time": "19:00–23:00", "block": "Class", "icon": "🎓",
+        "a": { "type": "class", "task": "Active note-taking · mark confusing parts to revisit later" },
+        "b": { "type": "class", "task": "Sit near front · discuss a concept with a classmate after class" }
+      },
+      {
+        "time": "23:00–00:30", "block": "Wind Down", "icon": "🌙",
+        "a": { "type": "freelance", "task": "Invoice / admin / update your project tracker" },
+        "b": { "type": "academic", "task": "Organize today's class notes into clean bullet points" }
+      },
+      {
+        "time": "00:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Relax — no work screens, just wind down" },
+        "b": { "type": "personal", "task": "Prep tomorrow — check schedule, set out what you need" }
+      }
+    ],
+    "Wed": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Breakfast + review your goals for this midweek day" },
+        "b": { "type": "personal", "task": "Morning walk · midweek reset · come back with a clear head" }
+      },
+      {
+        "time": "10:30–12:30", "block": "Deep Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Complete a pending client deliverable — midweek push" },
+        "b": { "type": "academic", "task": "Write or draft a full section of your current assignment" }
+      },
+      {
+        "time": "12:30–13:30", "block": "Focus Block", "icon": "📝",
+        "a": { "type": "academic", "task": "Review this week's lecture notes while they're still fresh" },
+        "b": { "type": "skill", "task": "Skill course — one focused module with no distractions" }
+      },
+      {
+        "time": "13:30–14:30", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook + eat completely away from desk — full break" },
+        "b": { "type": "personal", "task": "Quick easy meal + 20 min rest or short nap" }
+      },
+      {
+        "time": "14:30–17:30", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Deep academic session — tackle the hardest topic this week" },
+        "b": { "type": "skill", "task": "Skill practice session at the library — apply what you've learned" }
+      },
+      {
+        "time": "17:30–18:30", "block": "Transition", "icon": "🎒",
+        "a": { "type": "personal", "task": "Head to uni · use commute to review flashcards or quick notes" },
+        "b": { "type": "freelance", "task": "Reply to any pending client messages before class starts" }
+      },
+      {
+        "time": "19:00–23:00", "block": "Class", "icon": "🎓",
+        "a": { "type": "class", "task": "Last class day — stay sharp, finish the class week strong" },
+        "b": { "type": "class", "task": "Note down 3 key takeaways from this week across all classes" }
+      },
+      {
+        "time": "23:00–00:30", "block": "Wind Down", "icon": "🌙",
+        "a": { "type": "skill", "task": "Skill course catch-up — anything missed Mon or Tue" },
+        "b": { "type": "freelance", "task": "Send weekly client status update or check project pipeline" }
+      },
+      {
+        "time": "00:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Wind down · reward yourself — class week is done" },
+        "b": { "type": "personal", "task": "Short journal — what was the hardest thing this week?" }
+      }
+    ],
+    "Thu": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Relaxed start — no class tonight, enjoy the morning" },
+        "b": { "type": "personal", "task": "Longer breakfast · write down your top 2 goals for today" }
+      },
+      {
+        "time": "10:30–13:30", "block": "Deep Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Big 3h sprint — tackle the most important client task this week" },
+        "b": { "type": "academic", "task": "3h academic block — write a substantial part of your assignment" }
+      },
+      {
+        "time": "13:30–14:30", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook a proper lunch — Thursday treat, you've earned it" },
+        "b": { "type": "personal", "task": "Order in if you're low on energy — protect afternoon focus" }
+      },
+      {
+        "time": "14:30–17:00", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Work on essay or research paper — complete one section" },
+        "b": { "type": "skill", "task": "Skill deep dive — longer hands-on practice or project build" }
+      },
+      {
+        "time": "17:00–18:00", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Skill course — new module, keep momentum going" },
+        "b": { "type": "freelance", "task": "Review, polish, and send out a deliverable to a client" }
+      },
+      {
+        "time": "18:00–19:30", "block": "Break", "icon": "🚶",
+        "a": { "type": "personal", "task": "Walk outside · grocery run · gym" },
+        "b": { "type": "personal", "task": "Full rest — lie down, podcast, or short nap" }
+      },
+      {
+        "time": "19:30–22:00", "block": "Evening Work", "icon": "📝",
+        "a": { "type": "academic", "task": "Assignment writing — aim to finish one full section tonight" },
+        "b": { "type": "freelance", "task": "Work on a new project feature or start a new client task" }
+      },
+      {
+        "time": "22:00–23:30", "block": "Second Block", "icon": "💻",
+        "a": { "type": "freelance", "task": "Review + polish deliverable · send to client with notes" },
+        "b": { "type": "academic", "task": "Read and annotate 2 academic sources for upcoming work" }
+      },
+      {
+        "time": "23:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Cook dinner or snack · fully decompress" },
+        "b": { "type": "personal", "task": "Watch something you enjoy — complete off mode" }
+      }
+    ],
+    "Fri": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Energized Friday start — review what's still open this week" },
+        "b": { "type": "personal", "task": "Slow breakfast · mentally close the class week before working" }
+      },
+      {
+        "time": "10:30–13:00", "block": "Deep Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Weekly wrap-up — close all open client tasks before weekend" },
+        "b": { "type": "academic", "task": "Finalize any assignment with a deadline coming up this week" }
+      },
+      {
+        "time": "13:00–14:00", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook something good — Friday lunch is a weekly ritual" },
+        "b": { "type": "personal", "task": "Go out or order — end-of-class-week small treat" }
+      },
+      {
+        "time": "14:00–16:30", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Weekend academic prep — read ahead for next week's classes" },
+        "b": { "type": "skill", "task": "Build a portfolio piece using skills you've learned this week" }
+      },
+      {
+        "time": "16:30–17:30", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Skill course — Friday session, one full module" },
+        "b": { "type": "freelance", "task": "Research one potential new client or niche to target next week" }
+      },
+      {
+        "time": "17:30–19:30", "block": "Free Time", "icon": "🎉",
+        "a": { "type": "personal", "task": "Go out · meet people · completely switch off" },
+        "b": { "type": "personal", "task": "Hobby · creative activity · full recharge" }
+      },
+      {
+        "time": "19:30–22:00", "block": "Evening Work", "icon": "📝",
+        "a": { "type": "academic", "task": "Pre-read next week's topics — light, not intense" },
+        "b": { "type": "freelance", "task": "Scope and plan next week's freelance tasks in detail" }
+      },
+      {
+        "time": "22:00–23:30", "block": "Second Block", "icon": "💻",
+        "a": { "type": "freelance", "task": "Client updates · invoicing · project tracker cleanup" },
+        "b": { "type": "academic", "task": "Write up this week's key learnings into clean notes" }
+      },
+      {
+        "time": "23:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Dinner · Friday wind down · no alarms tomorrow" },
+        "b": { "type": "personal", "task": "Movie or show · full rest mode" }
+      }
+    ],
+    "Sat": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Slow Saturday start — proper breakfast, no rush" },
+        "b": { "type": "personal", "task": "Plan today's A/B choices over coffee before starting" }
+      },
+      {
+        "time": "10:30–12:30", "block": "Deep Work", "icon": "📝",
+        "a": { "type": "academic", "task": "Assignment sprint — make real meaningful progress" },
+        "b": { "type": "freelance", "task": "Build or ship something for a client — start to finish" }
+      },
+      {
+        "time": "12:30–14:00", "block": "Second Block", "icon": "💻",
+        "a": { "type": "freelance", "task": "Work on ongoing project — focused 1.5h" },
+        "b": { "type": "skill", "task": "Skill practice — build something using what you've learned" }
+      },
+      {
+        "time": "14:00–15:00", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Cook a relaxed Saturday lunch — no rush" },
+        "b": { "type": "personal", "task": "Meal prep for the whole week while cooking — save weekday time" }
+      },
+      {
+        "time": "15:00–17:00", "block": "Library", "icon": "📚",
+        "a": { "type": "library", "task": "Go to library — calm 2h deep focus session" },
+        "b": { "type": "academic", "task": "Study a difficult concept at home until it fully clicks" }
+      },
+      {
+        "time": "17:00–19:00", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Longer skill session — 2 modules or chapters back to back" },
+        "b": { "type": "academic", "task": "Read and annotate academic sources for upcoming work" }
+      },
+      {
+        "time": "19:00–21:00", "block": "Free Time", "icon": "🎉",
+        "a": { "type": "personal", "task": "Social — friends, call family, go out" },
+        "b": { "type": "personal", "task": "Hobby time — fully recharge, no work allowed" }
+      },
+      {
+        "time": "21:00–23:00", "block": "Evening Work", "icon": "💻",
+        "a": { "type": "freelance", "task": "Plan next week's freelance tasks — write them out in detail" },
+        "b": { "type": "academic", "task": "Prep Sunday's weekly review — gather notes and materials" }
+      },
+      {
+        "time": "23:00–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Cook dinner · relax · Saturday is done" },
+        "b": { "type": "personal", "task": "Watch something · light wind-down before sleep" }
+      }
+    ],
+    "Sun": [
+      {
+        "time": "10:00–10:30", "block": "Morning", "icon": "☀️",
+        "a": { "type": "personal", "task": "Slow start · big breakfast · set your intention for the week ahead" },
+        "b": { "type": "personal", "task": "Review last week's evaluation answers — what to improve?" }
+      },
+      {
+        "time": "10:30–13:00", "block": "Deep Work", "icon": "📝",
+        "a": { "type": "academic", "task": "Weekly academic review — consolidate all notes into one doc" },
+        "b": { "type": "freelance", "task": "Work on a personal freelance project or new case study" }
+      },
+      {
+        "time": "13:00–14:00", "block": "Lunch", "icon": "🍳",
+        "a": { "type": "personal", "task": "Sunday cooking — make something special, enjoy the process" },
+        "b": { "type": "personal", "task": "Meal prep for Mon–Tue to remove friction on class days" }
+      },
+      {
+        "time": "14:00–16:00", "block": "Second Block", "icon": "💻",
+        "a": { "type": "freelance", "task": "Admin block — proposals, invoices, portfolio update" },
+        "b": { "type": "academic", "task": "Work on the most pressing assignment due this week" }
+      },
+      {
+        "time": "16:00–17:00", "block": "Focus Block", "icon": "📈",
+        "a": { "type": "skill", "task": "Skill course — catch up anything missed this week" },
+        "b": { "type": "freelance", "task": "Research a new tool, technique, or market for your freelance work" }
+      },
+      {
+        "time": "17:00–19:30", "block": "Free Time", "icon": "🎉",
+        "a": { "type": "personal", "task": "Full rest — ideally no screens, real recovery" },
+        "b": { "type": "personal", "task": "Walk, nature, or anything that genuinely resets your mind" }
+      },
+      {
+        "time": "19:30–21:30", "block": "Weekly Planning", "icon": "🗓️",
+        "a": { "type": "academic", "task": "Plan full week — academic deadlines, reading schedule, priorities" },
+        "b": { "type": "freelance", "task": "Plan full week — client tasks, proposals, and delivery dates" }
+      },
+      {
+        "time": "21:30–23:30", "block": "Buffer", "icon": "💻",
+        "a": { "type": "freelance", "task": "Catch-up: any incomplete freelance task from this week" },
+        "b": { "type": "academic", "task": "Catch-up: any unfinished reading or assignment from this week" }
+      },
+      {
+        "time": "23:30–01:00", "block": "Night", "icon": "🛌",
+        "a": { "type": "personal", "task": "Dinner · quiet wind-down · sleep on time for Monday" },
+        "b": { "type": "personal", "task": "Journal — how did this week go? What one thing changes next week?" }
+      }
+    ]
+  },
+  "evaluation": [
+    { "id": 1, "question": "Did I complete at least 1 freelance task today?", "category": "Freelance", "icon": "💻" },
+    { "id": 2, "question": "Did I study or do something academic today?", "category": "Academic", "icon": "📝" },
+    { "id": 3, "question": "Did I spend at least 30 min on my skill course?", "category": "Skill", "icon": "📈" },
+    { "id": 4, "question": "Did I cook at least one proper meal?", "category": "Health", "icon": "🍳" },
+    { "id": 5, "question": "Did I avoid getting stuck in only one type of work all day?", "category": "Balance", "icon": "⚖️" },
+    { "id": 6, "question": "Did I spend time at the library or a focused study space?", "category": "Focus", "icon": "🏛️" },
+    { "id": 7, "question": "What was my #1 win today?", "category": "Reflection", "icon": "✨" },
+    { "id": 8, "question": "What did I procrastinate on — and why?", "category": "Honest Check", "icon": "🔍" },
+    { "id": 9, "question": "What will I do differently tomorrow?", "category": "Growth", "icon": "🌱" }
+  ],
+  "anti_spiral_rules": [
+    { "trigger": "Freelancing > 4h in a row", "action": "Stop → do 30 min academic or skill" },
+    { "trigger": "Academic > 3h in a row", "action": "Stop → do 1 small freelance task" },
+    { "trigger": "Skipped library 2 days", "action": "Force a 2h library session tomorrow" },
+    { "trigger": "Missed a block today", "action": "Don't double it tomorrow — just move on" }
+  ],
+  "block_types": {
+    "freelance": { "color": "#4ade80", "description": "Client work, proposals, portfolio, admin" },
+    "academic":  { "color": "#818cf8", "description": "Assignments, readings, notes, research" },
+    "skill":     { "color": "#fb923c", "description": "Skill development course and practice" },
+    "library":   { "color": "#fbbf24", "description": "University library focused sessions" },
+    "class":     { "color": "#c084fc", "description": "Master's class 19:00–23:00" },
+    "personal":  { "color": "#6b7280", "description": "Morning, meals, breaks, wind down" }
+  }
+}

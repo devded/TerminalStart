@@ -12,6 +12,7 @@
         rel="stylesheet" />
 
     <link rel="stylesheet" href="style.css" />
+    <script>if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');</script>
 
     <style>
         :root {
@@ -297,6 +298,7 @@
                 <a href="routine.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh</a>
                 <a href="browserpad.html" class="nav-link current"><span style="color: var(--color-accent)">&gt;</span> browserpad</a>
                 <a href="feed.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> feed.rss</a>
+                <button id="theme-toggle" class="nav-link" style="background:none;border:none;cursor:pointer;padding:0;">[light]</button>
             </nav>
         </div>
 
@@ -616,6 +618,7 @@
         setTimeout(updateGlowBorder, 100);
         textarea.focus();
     </script>
+    <script src="theme.js"></script>
 </body>
 
 </html>

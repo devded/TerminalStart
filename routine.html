@@ -13,6 +13,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css" />
+    <script>if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');</script>
 
     <style>
         /* ── Day Tabs ── */
@@ -301,6 +302,7 @@
                 <a href="routine.html" class="nav-link current"><span style="color: var(--color-accent)">&gt;</span> routine.sh</a>
                 <a href="browserpad.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> browserpad</a>
                 <a href="feed.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> feed.rss</a>
+                <button id="theme-toggle" class="nav-link" style="background:none;border:none;cursor:pointer;padding:0;">[light]</button>
             </nav>
         </div>
 
@@ -538,6 +540,7 @@
                     `<div class="widget widget-rounded" style="padding:16px;color:#ef4444;font-size:0.75rem">&gt; failed to load routine.json — ${err.message}</div>`;
             });
     </script>
+    <script src="theme.js"></script>
 </body>
 
 </html>

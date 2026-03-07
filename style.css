@@ -8,6 +8,15 @@
     --color-hover: #18181b;
 }
 
+html.light {
+    --color-bg: #f8f8f8;
+    --color-fg: #1c1c1e;
+    --color-muted: #6b7280;
+    --color-border: #d4d4d8;
+    --color-accent: #7c3aed;
+    --color-hover: #efefef;
+}
+
 @keyframes now-pulse {
     0%, 100% { opacity: 0.9; }
     50%       { opacity: 0.35; }
@@ -674,4 +683,67 @@ a:hover .link-arrow {
     font-family: "JetBrains Mono", monospace;
     padding: 0.75rem;
     text-align: center;
+}
+
+/* ── Todo Widget ── */
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+    border-bottom: 1px solid transparent;
+    transition: background 150ms ease;
+}
+
+.todo-item:hover {
+    background: var(--color-hover);
+    border-bottom-color: var(--color-border);
+}
+
+.todo-check {
+    color: var(--color-accent);
+    opacity: 0.6;
+    font-weight: bold;
+    flex-shrink: 0;
+    letter-spacing: -0.05em;
+    user-select: none;
+}
+
+.todo-done .todo-check { opacity: 1; }
+
+.todo-text {
+    flex: 1;
+    color: var(--color-fg);
+}
+
+.todo-done .todo-text {
+    text-decoration: line-through;
+    color: var(--color-muted);
+    opacity: 0.45;
+}
+
+.todo-del {
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0 2px;
+    opacity: 0;
+    transition: opacity 150ms, color 150ms;
+}
+
+.todo-item:hover .todo-del { opacity: 0.4; }
+.todo-del:hover { opacity: 1 !important; color: #f87171; }
+
+.todo-empty {
+    padding: 0.6rem 1rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--color-muted);
+    opacity: 0.35;
 }

@@ -710,4 +710,60 @@ document.addEventListener("DOMContentLoaded", () => {
   loadFXRates();
   setInterval(loadFXRates, 5 * 60 * 1000);
 
+  // --- Todo Widget ---
+  const todoInput = document.getElementById('todo-input');
+  const todoList  = document.getElementById('todo-list');
+
+  if (todoInput && todoList) {
+    let todos = JSON.parse(localStorage.getItem('tui-todos') || '[]');
+
+    function saveTodos() {
+      localStorage.setItem('tui-todos', JSON.stringify(todos));
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderTodos() {
+      if (!todos.length) {
+        todoList.innerHTML = '<div class="todo-empty">// no tasks yet</div>';
+        return;
+      }
+      todoList.innerHTML = todos.map(t => `
+        <div class="todo-item${t.done ? ' todo-done' : ''}" data-id="${t.id}">
+          <span class="todo-check">${t.done ? '[x]' : '[ ]'}</span>
+          <span class="todo-text">${escHtml(t.text)}</span>
+          <button class="todo-del" data-id="${t.id}" title="delete">×</button>
+        </div>`).join('');
+
+      todoList.querySelectorAll('.todo-item').forEach(el => {
+        el.addEventListener('click', e => {
+          if (e.target.classList.contains('todo-del')) return;
+          const t = todos.find(t => t.id === el.dataset.id);
+          if (t) { t.done = !t.done; saveTodos(); renderTodos(); }
+        });
+      });
+
+      todoList.querySelectorAll('.todo-del').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          todos = todos.filter(t => t.id !== btn.dataset.id);
+          saveTodos(); renderTodos();
+        });
+      });
+    }
+
+    todoInput.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const text = todoInput.value.trim();
+      if (!text) return;
+      todos.unshift({ id: Date.now().toString(), text, done: false });
+      saveTodos(); renderTodos();
+      todoInput.value = '';
+    });
+
+    renderTodos();
+  }
+
 });

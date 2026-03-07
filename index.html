@@ -43,6 +43,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
+    <script>if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');</script>
 </head>
 
 <body class="w-full min-h-screen p-2 text-sm bg-[var(--color-bg)] overflow-y-auto flex flex-col gap-2 select-none">
@@ -56,6 +57,7 @@
             <a href="routine.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh</a>
             <a href="browserpad.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> browserpad</a>
             <a href="feed.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> feed.rss</a>
+            <button id="theme-toggle" class="nav-link" style="background:none;border:none;cursor:pointer;padding:0;">[light]</button>
         </nav>
     </div>
 
@@ -289,9 +291,29 @@
             </div>
         </div>
 
+        <!-- Todo Widget -->
+        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 5; height: 140px">
+            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+            <div class="widget-title-bar">
+                <div class="widget-title">todo.md</div>
+            </div>
+            <div class="widget-content p-0">
+                <div class="flex items-center px-4 py-2 border-b border-[var(--color-border)]">
+                    <span class="text-[var(--color-accent)] font-mono text-sm mr-2 opacity-60">&gt;</span>
+                    <input type="text" id="todo-input"
+                        class="flex-1 bg-transparent border-none outline-none font-mono text-sm text-[var(--color-fg)] placeholder-[var(--color-muted)]"
+                        placeholder="add task..." autocomplete="off" />
+                </div>
+                <div id="todo-list" class="overflow-y-auto" style="max-height: 88px"></div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Scripts -->
+    <script src="theme.js"></script>
     <script src="script.js"></script>
 </body>
 

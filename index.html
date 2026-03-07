@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 
-<body class="w-full h-screen p-2 text-sm bg-[var(--color-bg)] overflow-hidden flex flex-col gap-2 select-none">
+<body class="w-full min-h-screen p-2 text-sm bg-[var(--color-bg)] overflow-y-auto flex flex-col gap-2 select-none">
     <!-- Slim Horizontal Nav Bar -->
     <div class="flex items-center justify-between px-2 shrink-0 font-mono text-xs" style="border-bottom: 1px solid var(--color-border); padding-bottom: 0.35rem;">
         <span id="attribution" class="text-[var(--color-muted)] opacity-30 hover:opacity-60 cursor-default transition-opacity duration-200">
@@ -55,11 +55,12 @@
             <a href="index.html" class="nav-link current"><span style="color: var(--color-accent)">&gt;</span> dashboard</a>
             <a href="routine.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh</a>
             <a href="browserpad.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> browserpad</a>
+            <a href="feed.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> feed.rss</a>
         </nav>
     </div>
 
     <!-- Grid Container -->
-    <div class="w-full flex-1 min-h-0 z-10 relative px-2 py-3 grid-container" id="grid-layout">
+    <div class="w-full z-10 relative px-2 py-3 grid-container" id="grid-layout">
         <!-- Search Widget -->
         <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 1">
             <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
@@ -149,14 +150,6 @@
                     </div>
                 </div>
 
-                <!-- Daily Forecast -->
-                <div class="border-t border-[var(--color-border)] pt-3 mt-auto">
-                    <div class="text-[10px] text-[var(--color-muted)] uppercase tracking-wider mb-2">7-day forecast
-                    </div>
-                    <div id="weather-daily-forecast" class="space-y-1.5 text-xs font-mono">
-                        <!-- Daily forecast items will be inserted here -->
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -296,25 +289,6 @@
             </div>
         </div>
 
-        <!-- Hacker News Feed Widget -->
-        <div class="widget widget-rounded widget-glow" style="grid-column: span 3; grid-row: 5;">
-            <svg class="absolute top-[-1px] left-[-1px] w-full h-full pointer-events-none z-10 overflow-visible">
-                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
-            </svg>
-            <div class="widget-title-bar">
-                <div class="widget-title">feed.rss</div>
-            </div>
-            <div class="widget-content flex flex-col p-0">
-                <div class="flex items-center gap-2 px-3 py-1.5 border-b border-[var(--color-border)]">
-                    <button onclick="switchFeedTab('hn')" id="feed-tab-hn" class="feed-tab active">[hn]</button>
-                    <button onclick="switchFeedTab('security')" id="feed-tab-security" class="feed-tab">[security]</button>
-                    <button onclick="switchFeedTab('tech')" id="feed-tab-tech" class="feed-tab">[tech]</button>
-                </div>
-                <div id="hn-feed" class="hn-feed">
-                    <div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Scripts -->

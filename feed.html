@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>feed.rss // ~/CSir.info</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+        :root {
+            --color-bg: #09090b;
+            --color-fg: #fafafa;
+            --color-muted: #71717a;
+            --color-border: #27272a;
+            --color-accent: #a78bfa;
+            --color-hover: #18181b;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--color-bg);
+            color: var(--color-fg);
+            font-family: 'JetBrains Mono', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 0.5rem;
+        }
+
+        .feed-shell {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .feed-widget {
+            flex: 1;
+            min-height: 0;
+            border: 1px solid var(--color-border);
+            background: var(--color-bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .feed-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: -0.6rem;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .feed-title {
+            margin-left: 0.75rem;
+            background: var(--color-bg);
+            padding: 0 0.5rem;
+            color: var(--color-muted);
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: lowercase;
+            pointer-events: auto;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feed-widget:hover .feed-title {
+            color: var(--color-accent);
+            text-shadow: 0 0 8px var(--color-accent);
+        }
+
+        .feed-tabs-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-bottom: 1px solid var(--color-border);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="feed-shell">
+        <!-- Slim Horizontal Nav Bar -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding: 0 0.5rem 0.35rem; border-bottom: 1px solid var(--color-border); margin-bottom: 0.75rem; flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:0.75rem;">
+            <span id="attribution" style="color:var(--color-muted); opacity:0.3; cursor:default; transition:opacity 0.2s;" onmouseenter="this.style.opacity=0.6" onmouseleave="this.style.opacity=0.3">
+                <span id="attribution-text">~/CSir.info</span>
+            </span>
+            <nav style="display:flex; align-items:center; gap:1rem;">
+                <a href="index.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> dashboard</a>
+                <a href="routine.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> routine.sh</a>
+                <a href="browserpad.html" class="nav-link"><span style="color: var(--color-accent); opacity: 0.6">[→]</span> browserpad</a>
+                <a href="feed.html" class="nav-link current"><span style="color: var(--color-accent)">&gt;</span> feed.rss</a>
+            </nav>
+        </div>
+
+        <!-- Feed Widget -->
+        <div class="feed-widget widget-glow">
+            <svg style="position:absolute; top:-1px; left:-1px; width:100%; height:100%; pointer-events:none; z-index:10; overflow:visible;" aria-hidden="true">
+                <path class="widget-glow-border" fill="none" stroke="var(--color-accent)" stroke-width="1" />
+            </svg>
+
+            <!-- Title bar -->
+            <div class="feed-titlebar">
+                <div class="feed-title">feed.rss</div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="feed-tabs-bar">
+                <button onclick="switchFeedTab('hn')" id="feed-tab-hn" class="feed-tab active">[hn]</button>
+                <button onclick="switchFeedTab('security')" id="feed-tab-security" class="feed-tab">[security]</button>
+                <button onclick="switchFeedTab('tech')" id="feed-tab-tech" class="feed-tab">[tech]</button>
+            </div>
+
+            <!-- Stories -->
+            <div id="hn-feed" class="hn-feed">
+                <div class="hn-loading"><span class="hn-loading-text">fetching stories...</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -262,7 +262,7 @@ a:hover .link-arrow {
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 52px 95px minmax(110px, 1fr) auto minmax(220px, 2fr);
+    grid-template-rows: 52px 95px 140px auto;
     gap: 12px;
     width: 100%;
     max-width: 900px;
